@@ -2,9 +2,25 @@
 
 // Below are tables related to Reviews
 
-DROP TABLE IF EXISTS `Reviews`;
+const { Client } = require('pg');
 
-CREATE TABLE `Reviews` (
+const client = new Client({
+  database: 'review'
+})
+
+client.connect((err) => {
+  if (err) {
+    console.error('connection error', err.stack)
+  } else {
+    console.log('connected')
+  }
+})
+
+
+
+DROP TABLE IF EXISTS `Review`;
+
+CREATE TABLE `Review` (
   `id` INT AUTO_INCREMENT DEFAULT NOT NULL,
   `product_id` INT NULL DEFAULT NULL,
   `page` INT DEFAULT 1,
@@ -13,9 +29,9 @@ CREATE TABLE `Reviews` (
   PRIMARY KEY (`id`)
 );
 
-DROP TABLE IF EXISTS `Results`;
+DROP TABLE IF EXISTS `Result`;
 
-CREATE TABLE `Results` (
+CREATE TABLE `Result` (
   `id` INT AUTO_INCREMENT DEFAULT NOT NULL,
   `product` INT,
   `review_id` INT NULL DEFAULT NULL,
@@ -65,9 +81,9 @@ CREATE TABLE `MetaData` (
   FOREIGN KEY (`quality`) REFERENCES Quality(`id`)
 );
 
-DROP TABLE IF EXISTS `Ratings`;
+DROP TABLE IF EXISTS `Rating`;
 
-CREATE TABLE `Ratings` (
+CREATE TABLE `Rating` (
   `id` INT AUTO_INCREMENT DEFAULT NOT NULL,
   `1` INT,
   `2` INT,
