@@ -1,8 +1,8 @@
 
-DROP TABLE IF EXISTS customer_review;
-DROP TABLE IF EXISTS photo;
-DROP TABLE IF EXISTS characteristics;
-DROP TABLE IF EXISTS characteristic_reviews;
+DROP TABLE IF EXISTS customer_review CASCADE;
+DROP TABLE IF EXISTS photo CASCADE;
+DROP TABLE IF EXISTS characteristics CASCADE;
+DROP TABLE IF EXISTS characteristic_reviews CASCADE;
 
 CREATE TABLE IF NOT EXISTS customer_review (
   id BIGSERIAL PRIMARY KEY,
@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS customer_review (
   date BIGINT,
   summary TEXT,
   body TEXT,
-  recommend TEXT,
+  recommend BOOLEAN DEFAULT true NOT NULL,
   reported BOOLEAN DEFAULT false NOT NULL,
   reviewer_name TEXT,
   reviewer_email TEXT,
@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS customer_review (
 
 CREATE TABLE IF NOT EXISTS photo (
   id BIGSERIAL PRIMARY KEY,
-  review_id INT,
+  review_id INT REFERENCES customer_review (id),
   url TEXT
 );
 
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS characteristics (
 
 CREATE TABLE IF NOT EXISTS characteristic_reviews (
   id BIGSERIAL PRIMARY KEY,
-  characteristic_id INT,
-  review_id INT,
+  characteristic_id INT REFERENCES characteristics (id),
+  review_id INT REFERENCES customer_review (id),
   value INT
 );
