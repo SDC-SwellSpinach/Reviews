@@ -6,35 +6,28 @@ module.exports = {
     jest: true,
   },
   extends: [
-    'plugin:react/recommended',
     'airbnb',
+    'airbnb/hooks',
   ],
   overrides: [
-    {
-      files: ['**/__tests__/**', '**/*.test.js'],
-      env: {
-        jest: true,
-      },
-    },
   ],
   parserOptions: {
     ecmaVersion: 'latest',
     sourceType: 'module',
-    ecmaFeatures: {
-      jsx: true,
-    },
   },
   plugins: [
     'react',
   ],
   rules: {
-    semi: ['error', 'always'],
-    'react/jsx-props-no-spreading': 'off',
-    'no-underscore-dangle': 'off',
-  },
-  settings: {
-    react: {
-      version: 'detect',
-    },
+    'no-console': 'off',
+    'import/no-cycle': 'off',
+    'consistent-return': 'off',
+    'no-alert': 'off',
+    'global-require': 'off',
+    'no-param-reassign': 0,
+    'no-restricted-syntax': 'off',
+    'guard-for-in': 'off',
+    'prefer-arrow-callback': 'off',
+    'func-names': 'off',
   },
 };
