@@ -6,10 +6,11 @@ module.exports = {
     const params = [page, count, sort, product_id];
     models.getReviews(params, (err, results) => {
       if (err) {
-        // console.log(err);
+        console.log(err);
         res.end();
       } else {
         // console.log(results);
+        console.log('This is results in controller LINE 13: ', results);
         res.sendStatus(201);
         res.json(results);
         res.end();
