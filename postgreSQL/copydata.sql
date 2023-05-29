@@ -13,3 +13,4 @@ SELECT setval('characteristics_id_seq', (select max(id) from characteristics ));
 \COPY characteristic_reviews FROM '/Users/b.h./Desktop/seniorPhase/reviews/Data/characteristic_reviews.csv' DELIMITER ',' CSV HEADER;
 
 SELECT setval('characteristic_reviews_id_seq', (select max(id) from characteristic_reviews ));
+

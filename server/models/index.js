@@ -6,7 +6,6 @@ module.exports = {
     const [page, count, sort, product_id] = params;
     const tempparams = [product_id, count]; // Add count as second paramter
     const queryString = 'SELECT id from customer_review WHERE product_id = $1 LIMIT $2';
-    // const queryString2 = 'SELECT customer_review.id, rating, date, summary, body, recommend, reported, reviewer_name, reviewer_email, response, helpfulness json_agg( json_build_object("id", p.id, "url", p.url)) AS p FROM customer_review LEFT JOIN photo ON customer_review.id = photo.review_id WHERE customer_review.id = $1 GROUP BY customer_review.id';
     const secondList = [];
     client.query(queryString, tempparams, (err, results) => {
       const arr = results.rows.map((key) => parseInt(key.id));
@@ -19,12 +18,24 @@ module.exports = {
           // console.log('This is results2 LINE 19: ', results2[1]);
           console.log('This is jsonAgg LINE 20 ', results2.rows[0].json_agg);
           secondList.push(results2.rows[0].json_agg);
-          // console.log('THis is second List;', secondList);
+          console.log('THis is second List;', secondList);
         });
       });
       // callback(err, secondList);
       console.log('This is second list LINE 26', secondList);
+      console.log('This is second list LINE 26', list);
       // callback(err2, results2);
+    });
+  },
+  getMeta(params, callback) {
+    console.log(params);
+    // const queryString = 'SELECT c.id, c.name FROM characteristics AS c INNER JOIN characteristic_reviews AS cr ON c.id = cr.characteristic_id WHERE product_id = $1;';
+    // const countrecommend = 'SELECT COUNT(*) FROM customer_review WHERE customer_review.id = $1 AND customer_review.recommend = true';
+    const queryStr = `SELECT json_agg(json_build_object('product_id', 100, 'ratings', (SELECT COUNT(*) FROM customer_review WHERE customer_review.product_id = $1 AND customer_review.recommend = true) , 'characteristics', (SELECT json_agg(json_build_object('id', c.id, 'name', c.name)) FROM characteristics AS c INNER JOIN characteristic_reviews AS cr ON c.id = cr.characteristic_id WHERE product_id = $1)));`;
+    client.query(queryStr, params, (err, results) => {
+      console.log('THis is Line 38: ', results.rows[0].json_agg);
+      console.log(err, results);
+      callback(err, results.rows[0].json_agg);
     });
   },
   postReview(params, callback) {

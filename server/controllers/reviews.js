@@ -54,6 +54,25 @@ module.exports = {
       }
     });
   },
+  getMeta: (req, res) => {
+    const params = [parseInt(req.query.product_id)];
+    // console.log(params);
+    models.getMeta(params, (err, results) => {
+      if (err) {
+        console.log(err);
+        res.end();
+      } else {
+        // console.log(results);
+        let data = {
+          ...results['0'],
+        };
+        data.product_id = req.query.product_id;
+        console.log('This is data:', data);
+        res.json(data);
+        res.end();
+      }
+    });
+  },
   putHelpful: (req, res) => {
     console.log(req.params.review_id);
     const params = [req.params.review_id];
@@ -83,10 +102,6 @@ module.exports = {
     });
   },
 };
-// getReviewsMeta: (req, res) => {
 
-// },
 
-// postReviews: (req, res) => {
 
-// },
