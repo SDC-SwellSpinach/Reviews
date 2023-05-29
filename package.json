@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node server/index.js",
     "server-dev": "nodemon server/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest",
+    "k6": "k6 run k6/script.js"
   },
   "author": "Blake Hansen",
   "license": "ISC",
@@ -18,16 +19,16 @@
     "csv-parse": "^5.3.10",
     "csv-parser": "^3.0.0",
     "express": "^4.18.2",
-    "jest": "^29.5.0",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.22",
-    "pg": "^8.11.0",
-    "supertest": "^6.3.3"
+    "pg": "^8.11.0"
   },
   "devDependencies": {
     "eslint": "^8.41.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-plugin-import": "^2.27.5",
-    "eslint-plugin-jsx-a11y": "^6.7.1"
+    "eslint-plugin-jsx-a11y": "^6.7.1",
+    "jest": "^29.5.0",
+    "supertest": "^6.3.3"
   }
 }

@@ -9,10 +9,13 @@ module.exports = {
         console.log(err);
         res.end();
       } else {
-        // console.log(results);
-        console.log('This is results in controller LINE 13: ', results);
-        res.sendStatus(201);
-        res.json(results);
+        const data = {
+          product_id,
+          count,
+          page,
+          results: { ...results },
+        };
+        res.json(data);
         res.end();
       }
     });
