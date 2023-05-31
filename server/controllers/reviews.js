@@ -13,7 +13,7 @@ module.exports = {
           product_id,
           count,
           page,
-          results: { ...results },
+          results: [...results],
         };
         res.json(data);
         res.end();
@@ -21,6 +21,7 @@ module.exports = {
     });
   },
   postReview: (req, res) => {
+    // console.log('This is req.body', req.body);
     const date = Date.now();
     const reported = false;
     const helpfulness = 0;
@@ -34,7 +35,7 @@ module.exports = {
       name,
       email,
       photos,
-      characteristics } = req.query;
+      characteristics } = req.body;
     const params = [product_id,
       rating, date,
       summary, body,
@@ -52,14 +53,12 @@ module.exports = {
         console.log(err);
         res.end();
       } else {
-        console.log(results);
         res.sendStatus(204);
       }
     });
   },
   getMeta: (req, res) => {
     const params = [parseInt(req.query.product_id)];
-    // console.log(params);
     models.getMeta(params, (err, results) => {
       if (err) {
         console.log(err);
@@ -77,34 +76,25 @@ module.exports = {
     });
   },
   putHelpful: (req, res) => {
-    console.log(req.params.review_id);
     const params = [req.params.review_id];
-    console.log(params);
     models.Helpful(params, (err, results) => {
       if (err) {
         console.log(err);
         res.end();
       } else {
-        console.log(results);
         res.sendStatus(204);
       }
     });
   },
   putReport: (req, res) => {
-    console.log(req.params.review_id);
     const params = [req.params.review_id];
-    console.log(params);
     models.Report(params, (err, results) => {
       if (err) {
         console.log(err);
         res.end();
       } else {
-        console.log(results);
         res.sendStatus(204);
       }
     });
   },
 };
-
-
-

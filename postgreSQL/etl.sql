@@ -38,3 +38,8 @@ CREATE TABLE IF NOT EXISTS characteristic_reviews (
   review_id INT REFERENCES customer_review (id),
   value INT
 );
+
+CREATE INDEX product on customer_review(product_id);
+CREATE INDEX review on photo(review_id);
+CREATE INDEX char_review on characteristic_reviews(review_id);
+CREATE INDEX char_id on characteristic_reviews(characteristic_id);
