@@ -4,7 +4,10 @@ const { Client } = require('pg');
 
 console.log(process.env.HOST, process.env.PORT);
 const client = new Client({
-  database: 'reviews',
+  database: process.env.DATABASE,
+  host: process.env.HOST,
+  user: process.env.DB_USER,
+  password: process.env.PASSWORD,
 });
 
 client.connect();
