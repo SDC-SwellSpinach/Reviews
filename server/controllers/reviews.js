@@ -69,7 +69,7 @@ module.exports = {
           ...results['0'],
         };
         data.product_id = req.query.product_id;
-        console.log('This is data:', data);
+        // console.log('This is data:', data);
         res.json(data);
         res.end();
       }

@@ -7,7 +7,7 @@ module.exports = {
     const tempparams = [product_id];
     const queryString = `SELECT json_agg(json_build_object('id', c.id, 'rating', c.rating, 'summary', c.summary, 'recommend', c.recommend, 'response', c.response, 'body', c.body, 'date', c.date, 'reviewer_name', c.reviewer_name, 'helpfulness', c.helpfulness, 'photos', (SELECT json_agg(json_build_object('id', p.id, 'url', p.url)) FROM photo AS p WHERE p.review_id = c.id))) FROM customer_review AS c INNER JOIN photo AS ph ON ph.review_id = c.id WHERE c.product_id = $1;`;
     client.query(queryString, tempparams, (err, results) => {
-      console.log(results);
+      // console.log(results);
       callback(err, results.rows[0].json_agg);
     });
   },
