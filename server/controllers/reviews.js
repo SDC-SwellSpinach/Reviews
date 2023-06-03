@@ -1,24 +1,42 @@
+const { createClient } = require('redis');
 const models = require('../models');
+
+const redisClient = createClient();
+redisClient.on('error', (err) => console.log('This is an error from redis: ', err));
+redisClient.connect();
 
 module.exports = {
   getReviews: (req, res) => {
+    // console.log('THis is query', req.query);
     const { page, count, sort, product_id } = req.query;
     const params = [page, count, sort, product_id];
-    models.getReviews(params, (err, results) => {
-      if (err) {
-        console.log(err);
-        res.end();
-      } else {
-        const data = {
-          product_id,
-          count,
-          page,
-          results: [...results],
-        };
-        res.json(data);
-        res.end();
-      }
-    });
+    // console.log('This is product ID: ', product_id);
+    redisClient.get(`productID-${product_id}`)
+      .then((CachedResult) => {
+        // console.log(CachedResult);
+        if (CachedResult) {
+          res.json(JSON.parse(CachedResult));
+        } else {
+          return models.getReviews(params, (err, results) => {
+            if (err) {
+              console.log(err);
+              res.end();
+            } else {
+              // console.log('WOrking');
+              // console.log('Line 13 controller/getreviews Check error:  2', results);
+              const data = {
+                product_id,
+                count,
+                page,
+                results: [...results],
+              };
+              res.json(data);
+              return redisClient.set(`productID-${product_id}`, JSON.stringify(data))
+                .then(() => console.log('Redis cached product success'));
+            }
+          });
+        }
+      });
   },
   postReview: (req, res) => {
     // console.log('This is req.body', req.body);
@@ -98,3 +116,52 @@ module.exports = {
     });
   },
 };
+
+
+
+
+// getReviews: (req, res) => {
+//   const { page, count, sort, productID } = req.query;
+//   const params = [page, count, sort, productID];
+//   redisClient.get(`productID-${productID}`)
+//     .then((CachedResult) => {
+//       if (CachedResult) {
+//         res.json(JSON.parse(CachedResult));
+//       } else {
+//         return models.getReviews(params, (err, results) => {
+//           if (err) {
+//             console.log(err);
+//             res.end();
+//           } else {
+//             console.log('WOrking');
+//             // console.log('Line 13 controller/getreviews Check error:  2');
+//             const data = {
+//               productID,
+//               count,
+//               page,
+//               results: [...results],
+//             };
+//             res.json(data);
+//             return redisClient.set(`productID-${productID}`, JSON.stringify(data)).then(() => console.log('Redis cached product success'));
+//           }
+//         });
+//       }
+//     });
+  // models.getReviews(params, (err, results) => {
+  //   if (err) {
+  //     console.log(err);
+  //     res.end();
+  //   } else {
+  //     console.log('WOrking');
+  //     // console.log('Line 13 controller/getreviews Check error:  2');
+  //     const data = {
+  //       productID,
+  //       count,
+  //       page,
+  //       results: [...results],
+  //     };
+  //     res.json(data);
+  //     res.end();
+  //   }
+  // });
+// },

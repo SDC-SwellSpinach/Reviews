@@ -5,18 +5,29 @@ module.exports = {
     // console.log(params);
     const [page, count, sort, product_id] = params;
     const tempparams = [product_id];
-    const queryString = `SELECT json_agg(json_build_object('id', c.id, 'rating', c.rating, 'summary', c.summary, 'recommend', c.recommend, 'response', c.response, 'body', c.body, 'date', c.date, 'reviewer_name', c.reviewer_name, 'helpfulness', c.helpfulness, 'photos', (SELECT json_agg(json_build_object('id', p.id, 'url', p.url)) FROM photo AS p WHERE p.review_id = c.id))) FROM customer_review AS c INNER JOIN photo AS ph ON ph.review_id = c.id WHERE c.product_id = $1;`;
+    const queryString = `SELECT json_agg(json_build_object('id', c.id, 'rating', c.rating, 'summary', c.summary, 'recommend', c.recommend, 'response', c.response, 'body', c.body, 'date', c.date, 'reviewer_name', c.reviewer_name, 'helpfulness', c.helpfulness, 'photos', (SELECT json_agg(json_build_object('id', p.id, 'url', p.url)) FROM photo AS p WHERE p.review_id = c.id))) FROM customer_review AS c WHERE c.product_id = $1;`;
     client.query(queryString, tempparams, (err, results) => {
-      // console.log(results);
-      callback(err, results.rows[0].json_agg);
+      if (err) {
+        console.log('Get Reviews Error: ', err);
+      } else {
+        // console.log('Line 13 models/getreviews Check error:  1');
+        // console.log('LINE 14 results: ', results);
+        if (results.rows[0].json_agg === null) {
+          callback(err, [7]);
+        } else {
+          callback(err, results.rows[0].json_agg);
+        }
+      }
     });
   },
   getMeta(params, callback) {
     const queryStr = `SELECT json_agg(json_build_object('product_id', 100, 'ratings', (SELECT COUNT(*) FROM customer_review WHERE customer_review.product_id = $1 AND customer_review.recommend = true) , 'characteristics', (SELECT json_agg(json_build_object('id', c.id, 'name', c.name)) FROM characteristics AS c INNER JOIN characteristic_reviews AS cr ON c.id = cr.characteristic_id WHERE product_id = $1)));`;
     client.query(queryStr, params, (err, results) => {
-      console.log('THis is Line 38: ', results.rows[0].json_agg);
-      console.log(err, results);
-      callback(err, results.rows[0].json_agg);
+      if (err) {
+        console.log(err);
+      } else {
+        callback(err, results.rows[0].json_agg);
+      }
     });
   },
   postReview(params, callback) {
@@ -49,3 +60,4 @@ module.exports = {
     });
   },
 };
+// SELECT json_agg(json_build_object('id', c.id, 'rating', c.rating, 'summary', c.summary, 'recommend', c.recommend, 'response', c.response, 'body', c.body, 'date', c.date, 'reviewer_name', c.reviewer_name, 'helpfulness', c.helpfulness, 'photos', (SELECT json_agg(json_build_object('id', p.id, 'url', p.url)) FROM photo AS p WHERE p.review_id = c.id))) FROM customer_review AS c WHERE c.product_id = 200;
